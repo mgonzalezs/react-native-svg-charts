@@ -96,6 +96,13 @@ class XAxis extends PureComponent {
         const x = this._getX(domain)
         const ticks = numberOfTicks ? x.ticks(numberOfTicks) : values
 
+        const extraProps = {
+            x,
+            ticks,
+            height,
+            formatLabel,
+        }
+
         return (
             <View style={ style }>
                 <View style={{ flexGrow: 1 }} onLayout={ event => this._onLayout(event) }>
@@ -113,7 +120,9 @@ class XAxis extends PureComponent {
                                 height,
                                 width,
                             }}>
-                            {children}
+                            {React.Children.map(children, child => {
+                                return React.cloneElement(child, extraProps)
+                            })}
                             {// don't render labels if width isn't measured yet,
                                 // causes rendering issues
                                 width > 0 &&

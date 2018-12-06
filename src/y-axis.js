@@ -92,6 +92,13 @@ class YAxis extends PureComponent {
             .map((value, index) => formatLabel(value, index, ticks.length))
             .reduce((prev, curr) => prev.toString().length > curr.toString().length ? prev : curr, 0)
 
+        const extraProps = {
+            y,
+            ticks,
+            width,
+            formatLabel,
+        }
+
         return (
             <View style={ [ style ] }>
                 <View
@@ -113,7 +120,9 @@ class YAxis extends PureComponent {
                             height,
                             width,
                         }}>
-                            {children}
+                            {React.Children.map(children, child => {
+                                return React.cloneElement(child, extraProps)
+                            })}
                             {
                                 // don't render labels if width isn't measured yet,
                                 // causes rendering issues
